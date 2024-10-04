@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ <meta charset="UTF-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <title>Ak Gym</title>
+ <style>
+ * {
+ margin: 0;
+ padding: 0;
+ box-sizing: border-box;
+ }
+ body {
+ font-family: 'Arial', sans-serif;
+ background-image:
+url('https://png.pngtree.com/thumb_back/fh260/background/20230630/pngtree-dark-fitness-room-with-training-equipment-and-black-dumbbells-on-the-image_3698810.jpg'); /*Replace with your background image */
+ background-size: cover;
+ background-position: center;
+ color: white;
+ }
+ header {
+ display: flex;
+ justify-content: center;
+ align-items: center;
+ background-color: rgba(0, 0, 0, 0.7);
+ padding: 20px;
+ }
+ .logo img {
+ width: 200px;
+ cursor: pointer;
+ animation: logoAnimation 2s ease-in-out infinite alternate;
+ }
+ @keyframes logoAnimation {
+ 0% { transform: scale(1); }
+ 100% { transform: scale(1.1); }
+ }
+ nav {
+ background-color: rgba(0, 0, 0, 0.7);
+ padding: 10px 0;
+ margin-top: 20px;
+ }
+ nav ul {
+ list-style: none;
+ display: flex;
+ justify-content: center;
+ }
+ nav ul li {
+ margin-left: 20px;
+ }
+ nav ul li a {
+ text-decoration: none;
+ color: white;
+ font-weight: bold;
+ font-size: 18px;
+ }
+ nav ul li a:hover {
+ color: #f44336;
+ transition: 0.3s;
+ }
+ section {
+ padding: 50px 20px;
+ margin: 20px;
+ background-color: rgba(0, 0, 0, 0.8);
+ border-radius: 10px;
+ box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+ display: none; /* Hide sections by default */
+ }
+ section.active {
+ display: block; /* Show only active section */
+ animation: fadeIn 1s ease;
+ }
+ @keyframes fadeIn {
+ from { opacity: 0; }
+ to { opacity: 1; }
+ }
+ h2 {
+ margin-bottom: 10px;
+ }
+ footer {
+ text-align: center;
+ padding: 10px;
+ background-color: rgba(0, 0, 0, 0.7);
+ color: white;
+ position: fixed;
+ bottom: 0;
+ width: 100%;
+ }
+ blockquote {
+ font-style: italic;
+ color: #f44336;
+ margin-top: 10px;
+ }
+ .contact-form {
+ background-color: white;
+ padding: 20px;
+ border-radius: 8px;
+ box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+ color: #333;
+ max-width: 400px; /* Adjusted width */
+ margin: auto; /* Center the form */
+ }
+ .contact-form input, .contact-form select {
+ width: 100%;
+ padding: 10px;
+ margin: 10px 0;
+ border: 1px solid #ddd;
+ border-radius: 4px;
+ font-size: 14px;
+ }
+ .contact-form button {
+ width: 100%;
+ padding: 10px;
+ background-color: #5cb85c;
+ color: white;
+ border: none;
+ border-radius: 4px;
+ font-size: 16px;
+ cursor: pointer;
+ transition: background-color 0.3s;
+ }
+ .contact-form button:hover {
+ background-color: #4cae4c;
+ }
+ .success-message {
+ text-align: center;
+ margin-top: 10px;
+ color: #5cb85c; /* Color for success message */
+ font-weight: bold;
+ }
+ .login-form {
+ background: rgba(255, 255, 255, 0.9);
+ padding: 30px; /* Increased padding for a professional look */
+ border-radius: 8px;
+ box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3); /* Enhanced shadow */
+ color: #333;
+ max-width: 400px; /* Adjusted width */
+ margin: auto; /* Center the form */
+ animation: slideIn 0.5s ease; /* Slide-in animation */
+ }
+ @keyframes slideIn {
+ from {
+ transform: translateY(-20px);
+ opacity: 0;
+ }
+ to {
+ transform: translateY(0);
+ opacity: 1;
+ }
+ }
+ .login-form input {
+ width: calc(100% - 20px);
+ padding: 10px;
+ margin: 10px 0;
+ border: 1px solid #ddd;
+ border-radius: 4px;
+ font-size: 14px;
+ }
+ .login-form button {
+ width: 100%;
+ padding: 10px;
+ background-color: #007bff; /* Primary color */
+ color: white;
+ border: none;
+ border-radius: 4px;
+ font-size: 16px;
+ cursor: pointer;
+ transition: background-color 0.3s;
+ }
+ .login-form button:hover {
+ background-color: #0056b3; /* Darker shade on hover */
+ }
+ .customer-data {
+ margin-top: 20px;
+ overflow-x: auto; /* Enable horizontal scroll if needed */
+ }
+ .customer-data table {
+ width: 100%;
+ border-collapse: collapse;
+ }
+ .customer-data th, .customer-data td {
+ padding: 10px;
+ text-align: left;
+ border: 1px solid #ddd;
+ }
+ </style>
+ <script
+ src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+ <script>
+ (function(){
+ emailjs.init("qSbEbznRR8vm2Jpw-"); // Ensure this is the correct public key
+ })();
+ let customers = JSON.parse(localStorage.getItem('customers')) || []; //Loadexisting customer data from local storage
+ function sendMail() {
+ var params = {
+ name: document.getElementById("name").value,
+ gender: document.getElementById("gender").value,
+ email: document.getElementById("email").value,
+ };
+ const serviceID = "service_kjk6tnl";
+ const templateID = "template_2wzzeb7";
+ emailjs.send(serviceID, templateID, params)
+ .then((res) => {
+ document.getElementById("name").value = "";
+ document.getElementById("gender").value = "";
+ document.getElementById("email").value = "";
+ customers.push(params); // Add customer data to the array
+ localStorage.setItem('customers', JSON.stringify(customers)); // Save customerdatato local storage
+ console.log(res);
+ document.getElementById("success-message").innerText = "Booking is successful";
+ //Show success message
+ alert("Booking is successful"); // Alert message
+ })
+ .catch((err) => {
+ console.log(err);
+ alert("There was an error sending your email");
+ });
+ }
+ function showSection(sectionId) {
+ // Hide all sections
+ const sections = document.querySelectorAll('section');
+ sections.forEach(section => {
+ section.classList.remove('active');
+ });
+ // Show the selected section
+ const activeSection = document.getElementById(sectionId);
+ activeSection.classList.add('active');
+ }
+ function login() {
+ var username = document.getElementById("username").value;
+ var password = document.getElementById("password").value;
+ if (username === "akshay" && password === "193") {
+ alert("Login successful");
+ showCustomerData(); // Call function to show customer data
+ } else {
+ alert("Login failed. Please try again.");
+ }
+ }
+ function showCustomerData() {
+ const developerSection = document.getElementById("developer");
+ developerSection.innerHTML = ''; // Clear existing content
+ // Create and add the "Customer Data" heading
+ const heading = document.createElement('h2');
+ heading.textContent = 'Customer Data';
+ developerSection.appendChild(heading);
+ const customerDataContainer = document.createElement('div');
+ customerDataContainer.classList.add('customer-data');
+ const table = document.createElement('table');
+ const headerRow = document.createElement('tr');
+ headerRow.innerHTML = '<th>ID</th><th>Name</th><th>Email</th><th>Gender</th>';
+ table.appendChild(headerRow);
+ // Add customer data with an auto-incrementing ID
+ customers.forEach((customer, index) => {
+ const row = document.createElement('tr');
+ row.innerHTML = `<td>${index +
+1}</td><td>${customer.name}</td><td>${customer.email}</td><td>${customer.gender}</td>`;
+ table.appendChild(row);
+ });
+ customerDataContainer.appendChild(table);
+ developerSection.appendChild(customerDataContainer);
+ developerSection.classList.add('active'); // Show developer section with customer data
+ }
+ 
+ </script>
+</head>
+<body>
+ <!-- Header and Logo -->
+ <header>
+ <div class="logo" onclick="location.href='#home'">
+ <img
+src="https://images.pexels.com/photos/1431282/pexels-photo-1431282.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500" alt="Gym Logo">
+ </div>
+ </header>
+ <!-- Navigation Bar -->
+ <nav>
+ <ul>
+ <li><a href="#home" onclick="showSection('home')">Home</a></li>
+ <li><a href="#timings" onclick="showSection('timings')">Gym Timings</a></li>
+ <li><a href="#rules" onclick="showSection('rules')">Rules</a></li>
+ <li><a href="#plans" onclick="showSection('plans')">Plans</a></li> <!-- Added Plans Menu -->
+ <li><a href="#contact" onclick="showSection('contact')">Book Here</a></li>
+ <li><a href="#about" onclick="showSection('about')">About Coach</a></li>
+ <li><a href="#developer" onclick="showSection('developer')">Developer</a></li>
+ </ul>
+ </nav>
+ <!-- Home Section -->
+ <section id="home" class="active">
+ <h2>Welcome to Ak Gym!</h2>
+ <p>Your fitness journey begins here.</p>
+ </section>
+ <!-- Gym Timings Section -->
+ <section id="timings">
+ <h2>Gym Timings</h2>
+ <ul>
+ <li>Monday - Friday: 6:00 AM - 9:00 PM</li>
+ <li>Saturday: 7:00 AM - 5:00 PM</li>
+ <li>Sunday: Closed</li>
+ </ul>
+ </section>
+ <!-- Rules Section -->
+ <section id="rules">
+ <h2>Gym Rules</h2>
+ <ul>
+ <li>Wear proper gym attire.</li>
+ <li>Wipe down equipment after use.</li>
+ <li>No food or drinks on the gym floor.</li>
+ <li>Respect others' space and time.</li>
+ </ul>
+ </section>
+
+ <!-- Plans Section -->
+ <section id="plans">
+ <h2>Gym Plans</h2>
+ <ul>
+
+<p>1) 1 month plan: ₹500 <br>
+   2) 6 month plan: ₹2500 <br>
+   3) 12 month plan: ₹5000</p>
+ </section>
+
+ <!-- Contact/Book Here Section -->
+ <section id="contact">
+ <h2>Book a Gym Session</h2>
+ <form class="contact-form">
+ <label for="name">Your Name</label>
+ <input type="text" id="name" placeholder="Enter your name">
+ <label for="gender">Gender</label>
+ <select id="gender">
+ <option value="Male">Male</option>
+ <option value="Female">Female</option>
+ </select>
+ <label for="email">Your Email</label>
+ <input type="email" id="email" placeholder="Enter your email">
+ <button type="button" onclick="sendMail()">Book Now</button>
+ <p class="success-message" id="success-message"></p>
+ </form>
+ </section>
+ <!-- About Coach Section -->
+ <section id="about">
+ <h2>About Coach</h2>
+ <img src="akphoto.png"
+width="200" height="200" alt="">
+ <p>Meet our certified coach Akshay, he has 5 years of experience in fitness training
+and bodybuilding.</p>
+ <p>Name: Akshay</p>
+ <p>Mobile: 7975004993 </p>
+ <br>
+ <h2><p style="color: aqua;"><i>"Don’t stop when you’re tired. Stop when you’re done." </i></p></h2>
+ </section>
+ <!-- Developer Section -->
+ <section id="developer">
+ <h2>Developer Login</h2>
+ <form class="login-form">
+ <label for="username">Username</label>
+ <input type="text" id="username" placeholder="Enter your username">
+ <label for="password">Password</label>
+ <input type="password" id="password" placeholder="Enter your password">
+ <button type="button" onclick="login()">Login</button>
+ </form>
+ </section>
+ <!-- Footer -->
+ <footer>
+ <p>Copyright © 2024 Ak Gym. All rights reserved.</p>
+ </footer>
+</body>
+</html>
